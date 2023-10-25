@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+        }
+
+        .encrypt-button, .decrypt-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #00f;
+            color: #0ff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .encrypt-button:hover, .decrypt-button:hover {
+            background-color: #0ff;
+        }
+
+        .output {
+            margin-top: 20px;
+        }
+
+        .header {
+            padding: 10px;
+            background-color: #000;
+            color: #0f0;
+            text-align: center;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #000;
+            color: #0f0;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .footer:after {
+            content: "All Rights Reserved 2023";
+            display: block;
+            margin-top: 10px;
+        }
+
+        .footer a {
+            color: #0f0;
+            text-decoration: none;
+        }
+
+        .no-copy {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SECRET MESSAGE SERVICE</h1>
+    </div>
+    <div class="container">
+        <textarea id="inputText" class="input-box" placeholder="Enter your text here"></textarea>
+        <br>
+        <input type="text" id="userNumber" class="input-box" placeholder="Enter your 10-digit number">
+        <br>
+        <button class="encrypt-button" onclick="encryptText()">Encrypt</button>
+        <br>
+        <input type="text" id="uniqueCode" class="input-box" placeholder="Enter the unique code">
+        <br>
+        <input type="text" id="decryptNumber" class="input-box" placeholder="Enter your 10-digit number for decryption">
+        <br>
+        <button class="decrypt-button" onclick="decryptText()">Decrypt</button>
+        <div class="output">
+            <p id="outputText"></p>
+        </div>
+    </div>
+    <div class="footer">
+        <p class="no-copy">All Rights Reserved 2023 | Website by Nigam Patel | <a href="https://www.facebook.com/nigam.patel.498/" target="_blank">Follow on Facebook</a></p>
+    </div>
+
+    <script>
+        let encryptionNumber = localStorage.getItem('encryptionNumber') || '';
+        let encryptedNumber = localStorage.getItem('encryptedNumber') || '';
+
+        function encryptText() {
+            const inputText = document.getElementById('inputText').value;
+            const userNumber = document.getElementById('userNumber').value;
+
+            if (userNumber.length !== 10 || isNaN(userNumber)) {
+                alert('Please enter a valid 10-digit number.');
+                return;
+            }
+
+            encryptionNumber = userNumber; // Store the number for decryption check
+
+            let encryptedText = '';
+            const shift = 3; // Adjust the shift value for stronger encryption
+
+            for (let i = 0; i < inputText.length; i++) {
+                const charCode = inputText.charCodeAt(i);
+                const shiftedCharCode = charCode + shift;
+                encryptedText += String.fromCharCode(shiftedCharCode);
+            }
+
+            // Encrypt the number
+            encryptedNumber = userNumber.split('').map(num => (parseInt(num) + shift) % 10).join('');
+
+            localStorage.setItem('encryptionNumber', encryptionNumber);
+            localStorage.setItem('encryptedNumber', encryptedNumber);
+
+            document.getElementById('uniqueCode').value = encryptedText + encryptedNumber;
+            document.getElementById('outputText').innerText = 'Text and number encrypted successfully.';
+        }
+
+        function decryptText() {
+            const encryptedTextAndNumber = document.getElementById('uniqueCode').value;
+            const decryptNumber = document.getElementById('decryptNumber').value;
+            const encryptedText = encryptedTextAndNumber.slice(0, -10);
+            const decryptedNumber = encryptedTextAndNumber.slice(-10);
+
+            if (decryptNumber !== encryptionNumber || decryptedNumber !== encryptedNumber) {
+                document.getElementById('outputText').innerText = 'Decryption failed. Number does not match.';
+                return;
+            }
+
+            let decryptedText = '';
+            const shift = 3;
+
+            for (let i = 0; i < encryptedText.length; i++) {
+                const charCode = encryptedText.charCodeAt(i);
+                const shiftedCharCode = charCode - shift;
+                decryptedText += String.fromCharCode(shiftedCharCode);
+            }
+
+            document.getElementById('outputText').innerText = 'Decrypted Text: ' + decryptedText;
+        }
+    </script>
+</body>
+</html>
