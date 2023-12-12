@@ -2,10 +2,11 @@
 <html>
 <head>
     <style>
+        /* This is the paint and decoration for the secret box! */
         body {
             font-family: 'Courier New', monospace;
-            background-color: #000;
-            color: #0f0;
+            background-color: black;
+            color: lime;
             margin: 0;
             padding: 0;
         }
@@ -15,61 +16,70 @@
             margin-top: 50px;
         }
 
+        /* Here's where you put your secret message! */
         .input-box {
             width: 100%;
             padding: 10px;
             font-size: 16px;
-            background-color: #000;
-            color: #0f0;
-            border: 1px solid #0f0;
+            background-color: black;
+            color: lime;
+            border: 1px solid lime;
         }
 
+        /* These are the buttons to lock and unlock your secret! */
         .encrypt-button, .decrypt-button {
             padding: 10px 20px;
             font-size: 16px;
-            background-color: #00f;
-            color: #0ff;
+            background-color: blue;
+            color: aqua;
             border: none;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
+        /* When you hover over the buttons, they light up! */
         .encrypt-button:hover, .decrypt-button:hover {
-            background-color: #0ff;
+            background-color: aqua;
         }
 
+        /* The output will show the secret message or alert! */
         .output {
             margin-top: 20px;
         }
 
+        /* This is like the top part of the secret box! */
         .header {
             padding: 10px;
-            background-color: #000;
-            color: #0f0;
+            background-color: black;
+            color: lime;
             text-align: center;
         }
 
+        /* This is like the bottom part of the secret box! */
         .footer {
             position: absolute;
             bottom: 0;
             width: 100%;
-            background-color: #000;
-            color: #0f0;
+            background-color: black;
+            color: lime;
             padding: 10px;
             text-align: center;
         }
 
+        /* The text at the bottom of the secret box! */
         .footer:after {
             content: "All Rights Reserved 2023";
             display: block;
             margin-top: 10px;
         }
 
+        /* This makes the link look cool! */
         .footer a {
-            color: #0f0;
+            color: lime;
             text-decoration: none;
         }
 
+        /* This prevents copying from the secret box! */
         .no-copy {
             user-select: none;
             -webkit-user-select: none;
@@ -79,12 +89,15 @@
     </style>
 </head>
 <body>
+    <!-- This is like the cover of the secret box! -->
     <div class="header">
         <h1>LEARN HOW THE ENCRYPTION AND DECRYPTION WORKS !!</h1>
     </div>
+    <!-- This is where the secret message goes! -->
     <div class="container">
         <textarea id="inputText" class="input-box" placeholder="Enter your text here"></textarea>
         <br>
+        <!-- You use these buttons to lock and unlock the secret! -->
         <input type="text" id="userNumber" class="input-box" placeholder="Enter your 10-digit number">
         <br>
         <button class="encrypt-button" onclick="encryptText()">Encrypt</button>
@@ -94,31 +107,36 @@
         <input type="text" id="decryptNumber" class="input-box" placeholder="Enter your 10-digit number for decryption">
         <br>
         <button class="decrypt-button" onclick="decryptText()">Decrypt</button>
+        <!-- This is where the secret message will show or alert will appear! -->
         <div class="output">
             <p id="outputText"></p>
         </div>
     </div>
+    <!-- This is like the bottom of the secret box! -->
     <div class="footer">
         <p class="no-copy">All Rights Reserved 2023 | Website by Nigam Patel | <a href="https://www.facebook.com/nigam.patel.498/" target="_blank">Follow on Facebook</a></p>
     </div>
 
     <script>
+        /* These are like the secret codes to lock and unlock the box! */
         let encryptionNumber = localStorage.getItem('encryptionNumber') || '';
         let encryptedNumber = localStorage.getItem('encryptedNumber') || '';
 
         function encryptText() {
+            // This is like hiding the secret in the box and locking it!
             const inputText = document.getElementById('inputText').value;
             const userNumber = document.getElementById('userNumber').value;
 
             if (userNumber.length !== 10 || isNaN(userNumber)) {
+                // This is like saying "Oops! The secret number isn't correct!"
                 alert('Please enter a valid 10-digit number.');
                 return;
             }
 
-            encryptionNumber = userNumber; // Store the number for decryption check
+            encryptionNumber = userNumber; // Saving the secret number
 
             let encryptedText = '';
-            const shift = 3; // Adjust the shift value for stronger encryption
+            const shift = 3; // This makes the secret stronger!
 
             for (let i = 0; i < inputText.length; i++) {
                 const charCode = inputText.charCodeAt(i);
@@ -126,29 +144,33 @@
                 encryptedText += String.fromCharCode(shiftedCharCode);
             }
 
-            // Encrypt the number
+            // Locking the secret number
             encryptedNumber = userNumber.split('').map(num => (parseInt(num) + shift) % 10).join('');
 
+            // Keeping the secret safe!
             localStorage.setItem('encryptionNumber', encryptionNumber);
             localStorage.setItem('encryptedNumber', encryptedNumber);
 
+            // Showing the secret in the box!
             document.getElementById('uniqueCode').value = encryptedText + encryptedNumber;
             document.getElementById('outputText').innerText = 'Text and number encrypted successfully.';
         }
 
         function decryptText() {
+            // This is like unlocking the box and finding the secret inside!
             const encryptedTextAndNumber = document.getElementById('uniqueCode').value;
             const decryptNumber = document.getElementById('decryptNumber').value;
             const encryptedText = encryptedTextAndNumber.slice(0, -10);
             const decryptedNumber = encryptedTextAndNumber.slice(-10);
 
             if (decryptNumber !== encryptionNumber || decryptedNumber !== encryptedNumber) {
+                // This is like saying "Oops! Can't find the secret!"
                 document.getElementById('outputText').innerText = 'Decryption failed. Number does not match.';
                 return;
             }
 
             let decryptedText = '';
-            const shift = 3;
+            const shift = 3; // This is the key to unlock the secret!
 
             for (let i = 0; i < encryptedText.length; i++) {
                 const charCode = encryptedText.charCodeAt(i);
@@ -156,6 +178,7 @@
                 decryptedText += String.fromCharCode(shiftedCharCode);
             }
 
+            // This is the secret message found inside the box!
             document.getElementById('outputText').innerText = 'Decrypted Text: ' + decryptedText;
         }
     </script>
